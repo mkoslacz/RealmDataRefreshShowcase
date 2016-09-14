@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         mAllStations = mRealm.where(Station.class).findAllAsync();
         mAllStations.addChangeListener(element -> {
-            // TODO: 14.09.2016 why does it state that every station has changed after saving programs?
+            // TODO: 14.09.2016 after removing some models this problem has stopped, why?
+            // (mentioned problem: why does it state that every station has changed after saving programs?)
             Log.d(TAG, String.format("stations change: all elements size: %d, changed " +
                     "elements size: %d", mAllStations.size(), element.size()));
         });
