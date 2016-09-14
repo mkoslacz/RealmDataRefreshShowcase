@@ -199,8 +199,9 @@ public class UpdateDataFromApiService extends IntentService {
 
     @NonNull
     private void saveProgramsToDb(List<Program> allFetchedPrograms) {
-        // TODO: 14.09.2016 why does it say that it saves X programs to db, and then listener on programs
-        // claims that there was only one new program saved?
+        // TODO: 14.09.2016 after bumping Realm version to 2.0.0-SNAPSHOT it works ok. why? 
+        // (mentioned problem: why does it say that it saves X programs to db, and then listener on programs
+        // claims that there was only one new program saved?)
         Log.d(TAG, String.format("saveProgramsToDb: saving %d programs to db", allFetchedPrograms.size()));
         mRealm.executeTransaction(realm
                 -> realm.copyToRealmOrUpdate(allFetchedPrograms));
