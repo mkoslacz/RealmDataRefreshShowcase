@@ -12,7 +12,6 @@ public class InterruptEarly {
         return true;
     }
 
-
     public static boolean now(String message, Throwable e) {
         if (BuildConfig.DEBUG) throw new RuntimeException(message, e);
         return true;
