@@ -62,11 +62,11 @@ public class Reminder extends RealmObject {
         newReminder.setProgram(program);
         newReminder.setTimeAhead(timeAhead);
         newReminder.setStartTime(program.getStartTime() - timeAhead);
-        if (seriesReminder != null) {   // TODO this causes stackOverflowError while using Realm#insert - check if it's needed
+        if (seriesReminder != null) {
             newReminder.setRepeating(true);
             newReminder.setSeriesReminder(seriesReminder);
         }
-        realm.copyToRealm(newReminder); // TODO change to insert§
+        realm.copyToRealm(newReminder);
         Log.d(TAG, String.format("created reminder for program \"%s\" with id %d and timeAhead %d",
                 program.getTitle(), program.getId(), timeAhead));
         return newReminder;
