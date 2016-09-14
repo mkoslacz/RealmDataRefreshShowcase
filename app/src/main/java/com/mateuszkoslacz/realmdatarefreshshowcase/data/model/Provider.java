@@ -20,7 +20,6 @@ public class Provider extends RealmObject implements IModelObject {
     public static final String C_STATIONOBJECTS_LIST_STATIONS = "stationObjects";
     public static final String C_OWNED_BOOLEAN = "owned";
 
-
     @PrimaryKey
     private int id;
     private String name;
@@ -48,21 +47,17 @@ public class Provider extends RealmObject implements IModelObject {
     }
 
     public void mapStationIdsToDbRelation(List<Station> allStations) {
-        for (RealmInt stationId :
-                stations) {
+        for (RealmInt stationId : stations) {
 
-            searchingStationWithGivenId:
-            for (Station station :
-                    allStations) {
+            for (Station station : allStations) {
                 if (station.getSid() == stationId.getValue()) {
                     stationObjects.add(station);
-                    break searchingStationWithGivenId;
+                    break;
                 }
             }
 
         }
     }
-
 
     public boolean isOwned() {
         return owned;

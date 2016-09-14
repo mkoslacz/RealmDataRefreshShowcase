@@ -1,7 +1,5 @@
 package com.mateuszkoslacz.realmdatarefreshshowcase.data.model;
 
-import android.graphics.Color;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -14,15 +12,11 @@ public class Category extends RealmObject implements IModelObject {
     public static final String C_NAME_STRING = "name";
     public static final String C_SUBCATEGORIES_LIST_SUBCATEGORY = "subcategories";
     public static final String C_COLOR_STRING = "color";
-    public static final String C_TIMESTAMP_LAST_USE_LONG = "lastUse";
-
-    private static final int DEFAULT_COLOR = Color.BLACK;
 
     @PrimaryKey
     String name;
     RealmList<Subcategory> subcategories;
     String color;
-    Long lastUse = 0l;
 
     public Category() { //mandatory for correct json deserialization
     }
@@ -39,22 +33,8 @@ public class Category extends RealmObject implements IModelObject {
         this.subcategories = subcategories;
     }
 
-    public int getColor() {
-        if (color == null) return DEFAULT_COLOR;
-        try {
-            if (color.length() > 4) return Color.parseColor(color);
-            else return Color.parseColor(convert3SymbolHexColorTo6SymbolHexColor(color));
-        } catch (IllegalArgumentException e) {
-            return DEFAULT_COLOR;
-        }
-    }
-
-    public Long getLastUse() {
-        return lastUse;
-    }
-
-    public void setLastUse(long pTimestamp) {
-        lastUse = pTimestamp;
+    public String getColor() {
+        return color;
     }
 
     @Override
@@ -77,14 +57,5 @@ public class Category extends RealmObject implements IModelObject {
     @Override
     public int hashCode() {
         return getName().hashCode();
-    }
-
-    private String convert3SymbolHexColorTo6SymbolHexColor(String threeSymbolHexColor) {
-        StringBuilder rrggbbBuilder = new StringBuilder("#");
-        for (int i = 1; i < threeSymbolHexColor.length(); i++) {
-            rrggbbBuilder.append(threeSymbolHexColor.charAt(i));
-            rrggbbBuilder.append(threeSymbolHexColor.charAt(i));
-        }
-        return rrggbbBuilder.toString();
     }
 }

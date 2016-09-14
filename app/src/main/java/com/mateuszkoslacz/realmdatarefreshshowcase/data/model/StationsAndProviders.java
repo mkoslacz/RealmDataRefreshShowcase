@@ -45,8 +45,7 @@ public class StationsAndProviders implements IModelObject {
             station.bind();
         }
 
-        for (Provider provider :
-                providers) {
+        for (Provider provider : providers) {
             provider.mapStationIdsToDbRelation(stations);
             provider.bind();
         }

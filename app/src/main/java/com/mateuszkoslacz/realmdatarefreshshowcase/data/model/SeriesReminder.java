@@ -109,8 +109,8 @@ public class SeriesReminder extends RealmObject {
                 .where(Program.class)
                 .equalTo(Program.C_TITLE_STRING, program.getTitle())
                 .equalTo(Program.C_STATIONID_INT, program.getStationId())
-                .greaterThan(Program.C_STARTTIME_INT, Timestamp.getNow() - seriesReminder.getTimeAhead())
-                .findAllSorted(Program.C_STARTTIME_INT, Sort.ASCENDING)
+                .greaterThan(Program.C_STARTTIME_LONG, Timestamp.getNow() - seriesReminder.getTimeAhead())
+                .findAllSorted(Program.C_STARTTIME_LONG, Sort.ASCENDING)
                 .distinct(Program.C_EPISODE_INT);
 
         Log.d(TAG, String.format("findEpisodesWithoutRetransmissions: found %d episodes", incomingDistinctEpisodes.size()));

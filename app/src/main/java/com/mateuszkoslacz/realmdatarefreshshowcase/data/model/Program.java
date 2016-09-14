@@ -42,8 +42,8 @@ public class Program extends RealmObject implements IModelObject {
     public static final String C_YEAR_INT = "year";
     public static final String C_DESCRIPTION_STRING = "description";
     public static final String C_RATING_STRING = "rating";
-    public static final String C_STARTTIME_INT = "startTime"; // TODO it is long, rename
-    public static final String C_ENDTIME_INT = "endTime"; // TODO it is long, rename
+    public static final String C_STARTTIME_LONG = "startTime";
+    public static final String C_ENDTIME_LONG = "endTime";
     public static final String C_NEXT_INT = "next";
     public static final String C_PREV_INT = "prev";
     public static final String C_TYPE_INT = "type";

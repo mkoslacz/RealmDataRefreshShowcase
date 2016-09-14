@@ -28,7 +28,6 @@ public class Station extends RealmObject implements IModelObject {
     private String icon;
     private boolean owned;
     private boolean favorite;
-    private int favouritePosition = Integer.MAX_VALUE;
     private int position;
 
     public Station() { //mandatory for correct json deserialization
@@ -46,12 +45,8 @@ public class Station extends RealmObject implements IModelObject {
         return lang;
     }
 
-    public Uri getImg() {
-        if (icon != null && !icon.isEmpty()) {
-            return Uri.parse(icon);
-        } else if (img != null && !img.isEmpty()) {
-            return Uri.parse(img);
-        } else return null;
+    public String getImg() {
+        return img;
     }
 
     public boolean isOwned() {
@@ -72,14 +67,6 @@ public class Station extends RealmObject implements IModelObject {
 
     public int getPosition() {
         return position;
-    }
-
-    public int getFavouritePosition() {
-        return favouritePosition;
-    }
-
-    public void setFavouritePosition(int favouritePosition) {
-        this.favouritePosition = favouritePosition;
     }
 
     @Override
