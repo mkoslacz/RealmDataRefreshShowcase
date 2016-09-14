@@ -407,7 +407,6 @@ public class Recommended extends RealmObject implements IModelObject {
                             "that you always call Favourite.init() and NotForMe.init() right " +
                             "after instantiating its fields!", title));
         }
-        this.program = new Program(this);
         return this;
     }
 

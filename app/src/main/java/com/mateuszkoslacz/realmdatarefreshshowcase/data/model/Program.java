@@ -94,75 +94,12 @@ public class Program extends RealmObject implements IModelObject {
     private int prev;
     private int type;
     private boolean recommended;
-    private Recommended linkedRecommended;
     private int userRating;
     private int likesCount;
-    private Reminder reminder;
     private String categoriesString;
     private String subcategoriesString;
 
     public Program() {
-    }
-
-    public Program(Recommended other) {
-        this.id = other.getId();
-        this.stationId = other.getStationId();
-//        this.station = other.getStation();
-        this.title = other.getTitle();
-        this.titleOrig = other.getTitleOrig();
-        this.director = other.getDirector();
-        this.cast = other.getCast();
-        this.episode = other.getEpisode();
-        this.episodesTotal = other.getEpisodesTotal();
-        this.season = other.getSeason();
-        this.part = other.getPart();
-        this.isLive = other.getIsLive();
-        this.photo = other.getPhoto();
-        this.categories = other.getCategories();
-        this.subcategories = other.getSubcategories();
-        this.shortDescription = other.getShortDescription();
-        this.hit = other.getHit();
-        this.duration = other.getDuration();
-        this.country = other.getCountry();
-        this.year = other.getYear();
-        this.description = other.getDescription();
-        this.rating = other.getRating();
-        this.startTime = other.getStartTime();
-        this.endTime = other.getEndTime();
-        this.next = other.getNext();
-        this.prev = other.getPrev();
-        this.type = other.getType();
-        this.recommended = other.isRecommended();
-        this.userRating = other.getUserRating();
-        this.likesCount = other.getLikesCount();
-        this.reminder = other.getReminder();
-        this.categoriesString = other.getCategoriesString();
-        this.subcategoriesString = other.getSubcategoriesString();
-        bind();
-    }
-
-    public static Uri ResourceToUri(Context context, int resID) {
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                context.getResources().getResourcePackageName(resID) + '/' +
-                context.getResources().getResourceTypeName(resID) + '/' +
-                context.getResources().getResourceEntryName(resID));
-    }
-
-    public static void createSingleReminder(Realm realm, Context context, Program program, long timeAhead) {
-        Reminder.create(context, realm, program, timeAhead, null);
-
-    }
-
-    public static void createSeriesReminder(Realm realm, Context context, Program program, long timeAhead) {
-        if (!program.isSerial()) {
-            if (InterruptEarly.now(
-                    String.format(
-                            "tried to create series reminder on non-series program \"%s\" id %d",
-                            program.getTitle(),
-                            program.getId()))) return;
-
-        }
-        Reminder.create(context, realm, program, timeAhead, null);
     }
 
     public int getId() {
@@ -274,36 +211,11 @@ public class Program extends RealmObject implements IModelObject {
         return prev;
     }
 
-    public boolean isRecommended() {
-        return recommended;
-    }
-
-    public void setRecommended(boolean recommended) {
-        this.recommended = recommended;
-    }
-
-    public Recommended getLinkedRecommended() {
-        if (!recommended) {
-            if (InterruptEarly.now("This program is not recommended! Make " +
-                    "sure to check if program is recommended first. Use Program#isRecommended method"))
-                return null;
-        }
-        if (linkedRecommended == null) {
-            return Realm.getDefaultInstance().where(Recommended.class).equalTo(Recommended.C_ID_INT, id).findFirst();
-        } else return linkedRecommended;
-    }
-
     public int getUserRating() {
         return userRating;
     }
 
     public void setUserRating(int userRating) {
-        if (givenIntIsNotInRatingValuesRange(userRating)) {
-            if (InterruptEarly.now(
-                    String.format("Tried to set \"%s\" userRating to %d, should be one of " +
-                            "USER_RATING_FAVOURITE (1), USER_RATING_NEUTRAL (0), " +
-                            "or USER_RATING_NOT_FOR_ME (-1)", title, userRating))) return;
-        }
         this.userRating = userRating;
     }
 
@@ -315,44 +227,8 @@ public class Program extends RealmObject implements IModelObject {
         this.likesCount = likesCount;
     }
 
-    public Favourite getConnectedFavourite() {
-        return Realm.getDefaultInstance().where(Favourite.class).equalTo(Favourite.C_TITLE_STRING, title).findFirst();
-    }
-
-    public NotForMe getConnectedNotForMe() {
-        return Realm.getDefaultInstance().where(NotForMe.class).equalTo(NotForMe.C_TITLE_STRING, title).findFirst();
-    }
-
     public Interval getInterval() {
         return new Interval(getStartTimeInMillis(), getEndTimeInMillis());
-    }
-
-    public double getPercentageProgress(long timestampNow) {
-        if (timestampNow < getStartTime()) {
-            return 0;
-        }
-        if (timestampNow > getEndTime()) {
-            return 1;
-        }
-        long duration = getEndTime() - getStartTime();
-        long durationPassed = timestampNow - getStartTime();
-        return (double) durationPassed / (double) duration;
-    }
-
-    public boolean isHighlighted() {
-        return (recommended || reminder != null || isFavourite());
-    }
-
-    public boolean isFavourite() {
-        return userRating == USER_RATING_FAVOURITE;
-    }
-
-    public Reminder getReminder() {
-        return reminder;
-    }
-
-    public void setReminder(Reminder reminder) {
-        this.reminder = reminder;
     }
 
     public boolean isSerial() {
@@ -363,22 +239,10 @@ public class Program extends RealmObject implements IModelObject {
         return type;
     }
 
-    private boolean givenIntIsNotInRatingValuesRange(int userRating) {
-        return userRating != USER_RATING_FAVOURITE && userRating != USER_RATING_NEUTRAL && userRating != USER_RATING_NOT_FOR_ME;
-    }
-
     @Override
     public IModelObject bind() {
 
         Realm realm = Realm.getDefaultInstance();
-
-//        station = realm.where(Station.class).equalTo(Station.C_SID_INT, stationId).findFirst();
-
-        Recommended recommended = realm.where(Recommended.class).equalTo(Recommended.C_ID_INT, getId()).findFirst();
-        if (recommended != null) {
-            setRecommended(true);
-//            linkedRecommended = recommended;
-        }
 
         RealmList<Subcategory> subcategoriesFromCategories = new RealmList<>();
 
@@ -422,24 +286,6 @@ public class Program extends RealmObject implements IModelObject {
         categories = null;
         subcategoriesString = subcategoriesStringBuilder.toString();
         categoriesString = categoriesStringBuilder.toString();
-
-
-        Favourite fav = realm.where(Favourite.class).equalTo(this.C_TITLE_STRING, title).findFirst();
-        if (fav != null) {
-            userRating = USER_RATING_FAVOURITE;
-        }
-
-        NotForMe notForMe = realm.where(NotForMe.class).equalTo(this.C_TITLE_STRING, title).findFirst();
-        if (notForMe != null) {
-            userRating = USER_RATING_NOT_FOR_ME;
-        }
-
-        if (fav != null && notForMe != null) {
-            InterruptEarly.now(
-                    String.format("Program \"%s\" would be in favourites AND in notForMe - make sure " +
-                            "that you always call Favourite.init() and NotForMe.init() right " +
-                            "after instantiating its fields!", title));
-        }
 
         return this;
     }

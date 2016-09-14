@@ -67,7 +67,6 @@ public class Reminder extends RealmObject {
             newReminder.setSeriesReminder(seriesReminder);
         }
         realm.copyToRealm(newReminder); // TODO change to insert§
-        program.setReminder(newReminder);
         Log.d(TAG, String.format("created reminder for program \"%s\" with id %d and timeAhead %d",
                 program.getTitle(), program.getId(), timeAhead));
         return newReminder;
