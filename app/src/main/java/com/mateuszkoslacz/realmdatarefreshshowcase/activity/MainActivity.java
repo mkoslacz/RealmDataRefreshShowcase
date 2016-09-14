@@ -37,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
                         "elements size: %d", mAllPrograms.size(), element.size())));
 
         mAllStations = mRealm.where(Station.class).findAllAsync();
-        mAllStations.addChangeListener(element ->
-                Log.d(TAG, String.format("stations change: all elements size: %d, changed " +
-                        "elements size: %d", mAllStations.size(), element.size())));
+        mAllStations.addChangeListener(element -> {
+            // TODO: 14.09.2016 why does it state that every station has changed after saving programs?
+            Log.d(TAG, String.format("stations change: all elements size: %d, changed " +
+                    "elements size: %d", mAllStations.size(), element.size()));
+        });
 
         startFetchingData();
     }
